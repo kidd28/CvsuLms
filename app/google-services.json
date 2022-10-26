@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "734550654861",
+    "project_id": "cvsulms",
+    "storage_bucket": "cvsulms.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734550654861:android:ef75ee330e73e00d0cc7c4",
+        "android_client_info": {
+          "package_name": "com.example.cvsulms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "734550654861-1hkauio39lftv5s5sqmv6td34tv5iilk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cvsulms",
+            "certificate_hash": "150092a0d8a04405804805ffbc69a0c11739dd5e"
+          }
+        },
+        {
+          "client_id": "734550654861-v1lbj5h70e9afgjneu12b1ghlpfgeha6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC118CarhDYJ694hMH6goOlp7EYt_Kiajs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734550654861-v1lbj5h70e9afgjneu12b1ghlpfgeha6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
