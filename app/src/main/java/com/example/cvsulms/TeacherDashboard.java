@@ -44,7 +44,6 @@ public class TeacherDashboard extends AppCompatActivity {
                         break;
                 }
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
             }
@@ -86,8 +85,4 @@ public class TeacherDashboard extends AppCompatActivity {
                     }
                 }).create().show();
     }
-
-
-
-
 }

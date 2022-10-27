@@ -91,7 +91,7 @@ public class TeacherSection extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         teacherSectionModels = new ArrayList<>();
-        recyclerView.setAdapter(teacherSectionAdapter);
+
 
         loadSection();
 
@@ -118,17 +118,15 @@ public class TeacherSection extends Fragment {
                         TeacherSectionModel model = ds.getValue(TeacherSectionModel.class);
                         teacherSectionModels.add(model);
                     }
-
                 }
                 teacherSectionAdapter = new TeacherSectionAdapter(getContext(), teacherSectionModels);
                 recyclerView.setAdapter(teacherSectionAdapter);
-
+                teacherSectionAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
     }
 }

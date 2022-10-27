@@ -75,7 +75,7 @@ Button create;
         hashMap.put("SubjCode", subjCode);
         hashMap.put("TeacherUid", user.getUid());
 
-        reference.child(sec).setValue(hashMap)
+        reference.child(sectionCode+subjCode).setValue(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -86,7 +86,7 @@ Button create;
                         hashMap1.put("email",user.getEmail());
                         hashMap1.put("role","Teacher");
                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Sections");
-                        reference1.child(sec).child("Members").child(firebaseAuth.getUid()).setValue(hashMap1)
+                        reference1.child(sectionCode+subjCode).child("Members").child(firebaseAuth.getUid()).setValue(hashMap1)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {

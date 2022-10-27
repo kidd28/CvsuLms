@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 
 public class TeacherSignup extends AppCompatActivity {
-    EditText TeachEmail,TeachName, EmployeeNumber, TeachPass;
+    EditText TeachEmail,TeachName, EmployeeNumber, TeachPass,Department;
     Button signup;
     FirebaseDatabase database;
     FirebaseAuth mAuth;
@@ -45,6 +45,7 @@ public class TeacherSignup extends AppCompatActivity {
         TeachPass = findViewById(R.id.TeacherPass);
         signup = findViewById(R.id.TeachSignup);
         background = findViewById(R.id.bg);
+        Department = findViewById(R.id.Dept);
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -90,6 +91,7 @@ public class TeacherSignup extends AppCompatActivity {
                     String uid = user.getUid();
                     String name = TeachName.getText().toString().trim();
                     String EmployNumber = EmployeeNumber.getText().toString().trim();
+                    String department = Department.getText().toString().trim();
 
                     HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("email", email);
@@ -102,6 +104,7 @@ public class TeacherSignup extends AppCompatActivity {
                     hashMap.put("Birthday", "--");
                     hashMap.put("Address", "--");
                     hashMap.put("Role", "Teacher");
+                    hashMap.put("Department",department);
 
                     reference.child(user.getUid()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

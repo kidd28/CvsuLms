@@ -102,6 +102,7 @@ public class StudentSignup extends AppCompatActivity {
                     hashMap.put("name", name);
                     hashMap.put("Cour&Sec", CourseSec);
                     hashMap.put("StudentNumber", StudentNumber);
+                    hashMap.put("PhoneNumber", "");
                     hashMap.put("image", "");
                     hashMap.put("cover", "");
                     hashMap.put("bio", "--");

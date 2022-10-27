@@ -1,5 +1,10 @@
 package com.example.cvsulms;
 
+import static androidx.appcompat.content.res.AppCompatResources.getDrawable;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 
@@ -9,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,7 +39,11 @@ public class StudentProfile extends Fragment {
     FirebaseDatabase database;
     DatabaseReference reference;
     ImageView avatar;
-    TextView name;
+    TextView name, email,coursec,stunum,phonenum,address,birthday,role ;
+    Button Logout;
+    FirebaseAuth auth;
+    ImageView IcEmail, IcCourSec, IcStuNum, IcPhone,IcAdress,IcBirthday;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -82,6 +92,56 @@ public class StudentProfile extends Fragment {
 
         avatar = v.findViewById(R.id.Avatar);
         name = v.findViewById(R.id.name);
+        email = v.findViewById(R.id.email);
+        coursec = v.findViewById(R.id.CourseSec);
+        stunum = v.findViewById(R.id.StudentNumber);
+        phonenum = v.findViewById(R.id.phone);
+        address = v.findViewById(R.id.addresss);
+        birthday = v.findViewById(R.id.birthday);
+        Logout = v.findViewById(R.id.logout);
+        role = v.findViewById(R.id.role);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        IcEmail = v.findViewById(R.id.IconEmail);
+        IcCourSec = v.findViewById(R.id.IconCourSec);
+        IcStuNum = v.findViewById(R.id.IconStuNum);
+        IcPhone = v.findViewById(R.id.IconPhone);
+        IcAdress = v.findViewById(R.id.IconAddress);
+        IcBirthday = v.findViewById(R.id.IconBirthday);
+
+
+        Glide
+                .with(getActivity())
+                .load(getDrawable(getActivity(),R.drawable.email))
+                .centerCrop()
+                .into(IcEmail);
+        Glide
+                .with(getActivity())
+                .load(getDrawable(getActivity(),R.drawable.section))
+                .centerCrop()
+                .into(IcCourSec);
+        Glide
+                .with(getActivity())
+                .load(getDrawable(getActivity(),R.drawable.idnumber))
+                .centerCrop()
+                .into(IcStuNum);
+        Glide
+                .with(getActivity())
+                .load(getDrawable(getActivity(),R.drawable.phone))
+                .centerCrop()
+                .into(IcPhone);
+        Glide
+                .with(getActivity())
+                .load(getDrawable(getActivity(),R.drawable.loc))
+                .centerCrop()
+                .into(IcAdress);
+        Glide
+                .with(getActivity())
+                .load(getDrawable(getActivity(),R.drawable.cake))
+                .centerCrop()
+                .into(IcBirthday);
 
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -94,11 +154,24 @@ public class StudentProfile extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     String StuName = "" + ds.child("name").getValue();
+                    String StuEmail = "" + ds.child("email").getValue();
+                    String CourSec = "" + ds.child("Cour&Sec").getValue();
+                    String StuNum = "" + ds.child("StudentNumber").getValue();
+                    String PhoneNum = "" + ds.child("PhoneNumber").getValue();
+                    String Address = "" + ds.child("Address").getValue();
+                    String Birthday = "" + ds.child("Birthday").getValue();
+                    String Role = "" + ds.child("Role").getValue();
 
                     name.setText(StuName);
+                    email.setText(StuEmail);
+                    coursec.setText(CourSec);
+                    stunum.setText(StuNum);
+                    phonenum.setText(PhoneNum);
+                    address.setText(Address);
+                    birthday.setText(Birthday);
+                    role.setText(Role);
+
                 }
-
-
             }
 
             @Override
@@ -107,15 +180,27 @@ public class StudentProfile extends Fragment {
             }
         });
 
-
-
-
-
-
-
+        Logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to Logout?")
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                auth.signOut();
+                                startActivity(new Intent(getActivity(), MainActivity.class));
+                                getActivity().finish();
+                            }
+                        }).create().show();
+            }
+        });
 
         return v;
 
 
     }
+
+
 }
