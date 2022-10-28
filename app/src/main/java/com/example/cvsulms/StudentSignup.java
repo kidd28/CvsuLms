@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -13,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 public class StudentSignup extends AppCompatActivity {
 
@@ -35,12 +40,14 @@ public class StudentSignup extends AppCompatActivity {
     FirebaseUser user;
     DatabaseReference reference;
     ImageView background;
-
+    String Email, name,uid;
+    GoogleSignInAccount account;
+    GoogleSignInClient mGoogleSignInClient;
+    Uri personPhoto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_signup);
-
 
         FirebaseApp.initializeApp(this);
 
@@ -56,94 +63,66 @@ public class StudentSignup extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Students");
 
+        Email = getIntent().getStringExtra("email");
+        name = getIntent().getStringExtra("name").toUpperCase(Locale.ROOT);
+        uid = getIntent().getStringExtra("uid");
+
+        StuEmail.setText(Email);
+        StuName.setText(name);
+
+        account = GoogleSignIn.getLastSignedInAccount(StudentSignup.this);
+        if (account != null) {
+             personPhoto = account.getPhotoUrl();
+        }
+
         Glide
                 .with(StudentSignup.this)
                 .load(getDrawable(R.drawable.cvsu_bg))
                 .centerCrop()
                 .into(background);
 
-
-
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = StuEmail.getText().toString().trim();
-                String pass = StuPass.getText().toString().trim();
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                String CourseSec = StuCourseSec.getText().toString().trim();
+                String StudentNumber = StuNumber.getText().toString().trim();
 
-                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    StuEmail.setError("Invalid Email");
-                    StuEmail.setFocusable(true);
-                } else if (pass.length() < 6) {
-                    StuPass.setError("Password should contain atleast 6 characters");
-                    StuPass.setFocusable(true);
-                } else {
-                    registerStu(email, pass);
-                }
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("email", Email);
+                hashMap.put("uid", uid);
+                hashMap.put("name", name);
+                hashMap.put("Cour&Sec", CourseSec);
+                hashMap.put("StudentNumber", StudentNumber);
+                hashMap.put("PhoneNumber", "");
+                hashMap.put("image", personPhoto.toString());
+                hashMap.put("cover", "");
+                hashMap.put("bio", "--");
+                hashMap.put("Birthday", "--");
+                hashMap.put("Address", "--");
+                hashMap.put("Role", "Student");
+
+                reference.child(user.getUid()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        user.reload();
+                        Toast.makeText(StudentSignup.this, "Registered.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(StudentSignup.this, StudentDashboard.class);
+                        startActivity(intent);
+                        StudentSignup.this.finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(StudentSignup.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
-    }
-    private void registerStu(String email, String pass) {
-        mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                if(task.isSuccessful()){
-                    user = FirebaseAuth.getInstance().getCurrentUser();
-
-                    String email = user.getEmail();
-                    String uid = user.getUid();
-                    String name = StuName.getText().toString().trim();
-                    String CourseSec = StuCourseSec.getText().toString().trim();
-                    String StudentNumber = StuNumber.getText().toString().trim();
-
-                    HashMap<String, String> hashMap = new HashMap<>();
-                    hashMap.put("email", email);
-                    hashMap.put("uid", uid);
-                    hashMap.put("name", name);
-                    hashMap.put("Cour&Sec", CourseSec);
-                    hashMap.put("StudentNumber", StudentNumber);
-                    hashMap.put("PhoneNumber", "");
-                    hashMap.put("image", "");
-                    hashMap.put("cover", "");
-                    hashMap.put("bio", "--");
-                    hashMap.put("Birthday", "--");
-                    hashMap.put("Address", "--");
-                    hashMap.put("Role", "Student");
-
-                    reference.child(user.getUid()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            user.reload();
-                            Toast.makeText(StudentSignup.this, "Registered.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(StudentSignup.this, StudentDashboard.class);
-                            startActivity(intent);
-                            StudentSignup.this.finish();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(StudentSignup.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                }
-                else {
-
-                    Toast.makeText(StudentSignup.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(StudentSignup.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
     }
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(StudentSignup.this, StudentLogin.class));
+        startActivity(new Intent(StudentSignup.this, MainActivity.class));
         StudentSignup.this.finish();
     }
 }

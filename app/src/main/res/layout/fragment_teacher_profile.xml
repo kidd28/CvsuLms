@@ -9,23 +9,29 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#9FBFA0">
+        android:scaleY="1.25"
+        android:scaleX="1.25"
+        android:background="@drawable/profile_bg">
+
+    </RelativeLayout>
 
         <FrameLayout
-            android:layout_marginTop="50dp"
             android:padding="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <androidx.cardview.widget.CardView
-                android:elevation="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
+                app:cardBackgroundColor="#0E6B13"
+                android:layout_marginBottom="20dp">
+            <androidx.cardview.widget.CardView
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/dark_green"
-                android:layout_marginBottom="20dp"
                 >
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -34,9 +40,10 @@
                     <TextView
                         android:layout_gravity="center"
                         android:id="@+id/name"
-                        android:textSize="30dp"
+                        android:textSize="20dp"
                         android:textColor="#FFFFFF"
-                        android:layout_marginTop="65dp"
+                        android:maxHeight="30dp"
+                        android:layout_marginTop="80dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                     </TextView>
@@ -44,7 +51,7 @@
                         android:layout_gravity="center"
                         android:id="@+id/role"
                         android:textAllCaps="true"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:layout_marginTop="5dp"
                         android:layout_width="wrap_content"
 
@@ -67,6 +74,7 @@
 
 
                             <LinearLayout
+                                android:padding="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
@@ -83,7 +91,7 @@
                                     android:id="@+id/email"
                                     android:text="--"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_margin="5dp"
                                     android:textColor="#FFFFFF"
                                     android:gravity="center_vertical"
@@ -91,6 +99,7 @@
                                     />
                             </LinearLayout>
                             <LinearLayout
+                                android:padding="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
@@ -115,6 +124,7 @@
                                     />
                             </LinearLayout>
                             <LinearLayout
+                                android:padding="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
@@ -139,6 +149,7 @@
                                     />
                             </LinearLayout>
                             <LinearLayout
+                                android:padding="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
@@ -162,6 +173,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:padding="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal">
@@ -184,6 +196,7 @@
                                     android:textSize="18sp" />
                             </LinearLayout>
                             <LinearLayout
+                                android:padding="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
@@ -210,12 +223,29 @@
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
+            </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:layout_marginTop="40dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_gravity="center_horizontal"
+                android:elevation="12dp"
+                android:id="@+id/view1"
+                app:cardCornerRadius="70dp"
+                android:background="#0E6B13"
+                android:layout_centerHorizontal="true"
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:thicknessRatio="1.9">
+            <ImageView
+                android:background="#0E6B13"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:layout_width="140dp"/>
+            <androidx.cardview.widget.CardView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:elevation="12dp"
                 android:id="@+id/view2"
                 app:cardCornerRadius="70dp"
@@ -228,21 +258,20 @@
                     android:background="@drawable/home_background_oval"
                     android:layout_height="120dp"
                     android:src="@drawable/ic_person"
-                    android:layout_width="match_parent"
-                    app:tint="#DCFFFFFF" />
+                    android:layout_width="match_parent" />
+            </androidx.cardview.widget.CardView>
             </androidx.cardview.widget.CardView>
         </FrameLayout>
+
         <Button
             android:id="@+id/logout"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:text="Logout"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/mybutton"
-            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            />
-    </RelativeLayout>
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/mybutton"
+            android:text="Logout"
+            android:textColor="@color/white" />
 
 </RelativeLayout>

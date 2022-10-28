@@ -9,14 +9,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#9FBFA0">
+        android:background="@drawable/profile_bg">
 
         <FrameLayout
-            android:layout_marginTop="50dp"
             android:padding="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <androidx.cardview.widget.CardView
                 android:elevation="5dp"
                 android:layout_width="match_parent"
@@ -24,9 +22,13 @@
                 android:layout_marginTop="100dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
-                app:cardBackgroundColor="@color/dark_green"
-                android:layout_marginBottom="20dp"
-                >
+                app:cardBackgroundColor="#0E6B13"
+                android:layout_marginBottom="20dp">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                app:cardBackgroundColor="@color/dark_green">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -34,18 +36,18 @@
                     <TextView
                         android:layout_gravity="center"
                         android:id="@+id/name"
-                        android:textSize="30dp"
-                        android:layout_marginTop="65dp"
+                        android:textSize="20dp"
+                        android:maxHeight="30dp"
+                        android:layout_marginTop="80dp"
                         android:layout_width="wrap_content"
                         android:textColor="#FFFFFF"
                         android:layout_height="wrap_content">
-
                     </TextView>
                     <TextView
                         android:layout_gravity="center"
                         android:id="@+id/role"
                         android:textAllCaps="true"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:layout_marginTop="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
@@ -58,20 +60,16 @@
                         android:orientation="vertical"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="5dp">
-
-
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="5dp"
                                 android:orientation="horizontal">
-
                                 <ImageView
                                     android:padding="5dp"
                                     android:id="@+id/IconEmail"
@@ -79,13 +77,13 @@
                                     android:layout_height="40dp"
                                     android:layout_gravity="center"
                                     android:layout_marginEnd="10dp" />
-
                                 <TextView
                                     android:id="@+id/email"
                                     android:text="--"
                                     android:textColor="#FFFFFF"
+                                    android:inputType="textMultiLine"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_margin="5dp"
                                     android:gravity="center_vertical"
                                     android:textSize="18sp"
@@ -96,7 +94,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
-
                                 <ImageView
                                     android:padding="5dp"
                                     android:id="@+id/IconCourSec"
@@ -104,7 +101,6 @@
                                     android:layout_height="40dp"
                                     android:layout_gravity="center"
                                     android:layout_marginEnd="10dp" />
-
                                 <TextView
                                     android:id="@+id/CourseSec"
                                     android:text="--"
@@ -121,7 +117,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
-
                                 <ImageView
                                     android:padding="5dp"
                                     android:id="@+id/IconStuNum"
@@ -216,28 +211,48 @@
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
+            </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:layout_marginTop="40dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_gravity="center_horizontal"
+                android:elevation="12dp"
+                android:id="@+id/view1"
+                app:cardCornerRadius="70dp"
+                android:background="@color/light_green"
+                android:layout_centerHorizontal="true"
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:thicknessRatio="1.9">
+                <ImageView
+                    android:background="#0E6B13"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"
+                    android:layout_width="140dp"/>
+            <androidx.cardview.widget.CardView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:elevation="12dp"
                 android:id="@+id/view2"
                 app:cardCornerRadius="70dp"
+                android:background="@color/light_green"
                 android:layout_centerHorizontal="true"
                 android:innerRadius="0dp"
                 android:shape="ring"
                 android:thicknessRatio="1.9">
                 <ImageView
                     android:id="@+id/Avatar"
-                    app:tint="#DCFFFFFF"
-                    android:background="@drawable/home_background_oval"
+                    android:background="#40AF44"
                     android:layout_height="120dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_person"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="120dp"/>
+            </androidx.cardview.widget.CardView>
             </androidx.cardview.widget.CardView>
         </FrameLayout>
+
         <Button
             android:id="@+id/logout"
             android:layout_alignParentBottom="true"

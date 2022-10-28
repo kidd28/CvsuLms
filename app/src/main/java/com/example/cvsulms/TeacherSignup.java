@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 public class TeacherSignup extends AppCompatActivity {
     EditText TeachEmail,TeachName, EmployeeNumber, TeachPass,Department;
@@ -33,7 +37,9 @@ public class TeacherSignup extends AppCompatActivity {
     FirebaseUser user;
     DatabaseReference reference;
     ImageView background;
-
+    String Email, name,uid;
+    GoogleSignInAccount account;
+    Uri personPhoto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,95 +57,66 @@ public class TeacherSignup extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Teachers");
 
+        Email = getIntent().getStringExtra("email");
+        name = getIntent().getStringExtra("name").toUpperCase(Locale.ROOT);
+        uid = getIntent().getStringExtra("uid");
+
+        account = GoogleSignIn.getLastSignedInAccount(TeacherSignup.this);
+        if (account != null) {
+            personPhoto = account.getPhotoUrl();
+        }
+
+        TeachEmail.setText(Email);
+        TeachName.setText(name);
         Glide
                 .with(TeacherSignup.this)
                 .load(getDrawable(R.drawable.cvsu_bg))
                 .centerCrop()
                 .into(background);
 
-
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = TeachEmail.getText().toString().trim();
-                String pass = TeachPass.getText().toString().trim();
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                String EmployNumber = EmployeeNumber.getText().toString().trim();
+                String department = Department.getText().toString().trim();
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("email",Email );
+                hashMap.put("uid", uid);
+                hashMap.put("name", name);
+                hashMap.put("Employee Number", EmployNumber);
+                hashMap.put("image", personPhoto.toString());
+                hashMap.put("cover", "");
+                hashMap.put("bio", "--");
+                hashMap.put("Birthday", "--");
+                hashMap.put("Address", "--");
+                hashMap.put("Role", "Teacher");
+                hashMap.put("Department",department);
 
-                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    TeachEmail.setError("Invalid Email");
-                    TeachEmail.setFocusable(true);
-                } else if (pass.length() < 6) {
-                    TeachPass.setError("Password should contain atleast 6 characters");
-                    TeachPass.setFocusable(true);
-                } else {
-                    registerTeacher(email, pass);
-                }
+                reference.child(user.getUid()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        user.reload();
+                        Toast.makeText(TeacherSignup.this, "Registered.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(TeacherSignup.this, TeacherDashboard.class);
+                        startActivity(intent);
+                        TeacherSignup.this.finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(TeacherSignup.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         });
 
 
     }
-
-    private void registerTeacher(String email, String pass) {
-        mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                if(task.isSuccessful()){
-                    user = FirebaseAuth.getInstance().getCurrentUser();
-
-                    String email = user.getEmail();
-                    String uid = user.getUid();
-                    String name = TeachName.getText().toString().trim();
-                    String EmployNumber = EmployeeNumber.getText().toString().trim();
-                    String department = Department.getText().toString().trim();
-
-                    HashMap<String, String> hashMap = new HashMap<>();
-                    hashMap.put("email", email);
-                    hashMap.put("uid", uid);
-                    hashMap.put("name", name);
-                    hashMap.put("Employee Number", EmployNumber);
-                    hashMap.put("image", "");
-                    hashMap.put("cover", "");
-                    hashMap.put("bio", "--");
-                    hashMap.put("Birthday", "--");
-                    hashMap.put("Address", "--");
-                    hashMap.put("Role", "Teacher");
-                    hashMap.put("Department",department);
-
-                    reference.child(user.getUid()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            user.reload();
-                            Toast.makeText(TeacherSignup.this, "Registered.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(TeacherSignup.this, TeacherDashboard.class);
-                            startActivity(intent);
-                            TeacherSignup.this.finish();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(TeacherSignup.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                }
-                else {
-
-                    Toast.makeText(TeacherSignup.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(TeacherSignup.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(TeacherSignup.this, TeacherLogin.class));
+        startActivity(new Intent(TeacherSignup.this, MainActivity.class));
         TeacherSignup.this.finish();
     }
 }

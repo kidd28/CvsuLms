@@ -5,6 +5,7 @@ import static androidx.appcompat.content.res.AppCompatResources.getDrawable;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +48,10 @@ public class TeacherProfile extends Fragment {
     TextView name, email,dept,empnum,phonenum,address,birthday, role;
     Button Logout;
     FirebaseAuth auth;
-    ImageView IcEmail, IcDept, IcEmpnum, IcPhone,IcAdress,IcBirthday;
+    ImageView  IcEmail, IcDept, IcEmpnum, IcPhone,IcAdress,IcBirthday;
+    GoogleSignInClient mGoogleSignInClient;
+    Uri personPhoto;
+    GoogleSignInAccount account;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -109,11 +119,26 @@ public class TeacherProfile extends Fragment {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Teachers");
+
+        account = GoogleSignIn.getLastSignedInAccount(getActivity());
+        if (account != null) {
+            personPhoto = account.getPhotoUrl();
+        }
+        Glide
+                .with(getActivity())
+                .load(personPhoto)
+                .centerCrop()
+                .into(avatar);
+
+        Glide
+                .with(getActivity())
+                .load(getDrawable(getActivity(),R.drawable.email))
+                .centerCrop()
+                .into(IcEmail);
         Glide
                 .with(getActivity())
                 .load(getDrawable(getActivity(),R.drawable.email))
@@ -169,6 +194,14 @@ public class TeacherProfile extends Fragment {
                     birthday.setText(Birthday);
                     role.setText(Role);
 
+                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken(getString(R.string.default_web_client_id))
+                            .requestEmail()
+                            .build();
+
+                    mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+
+
                 }
             }
 
@@ -177,7 +210,6 @@ public class TeacherProfile extends Fragment {
 
             }
         });
-
         Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,6 +220,7 @@ public class TeacherProfile extends Fragment {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {
                                 auth.signOut();
+                                revokeAccess();
                                 startActivity(new Intent(getActivity(), MainActivity.class));
                                 getActivity().finish();
                             }
@@ -198,4 +231,15 @@ public class TeacherProfile extends Fragment {
 
         return v;
     }
+    private void revokeAccess() {
+        mGoogleSignInClient.revokeAccess()
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }
+
+
 }

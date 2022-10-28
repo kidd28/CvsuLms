@@ -34,6 +34,12 @@ public class TeacherSectionAdapter extends RecyclerView.Adapter<TeacherSectionAd
         holder.section.setText(secCode);
         holder.subject.setText(subj);
 
+        holder.section.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
     @Override
     public int getItemCount() {

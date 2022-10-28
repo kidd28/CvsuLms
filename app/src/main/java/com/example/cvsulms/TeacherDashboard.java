@@ -2,6 +2,7 @@ package com.example.cvsulms;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.AlertDialog;
@@ -15,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class TeacherDashboard extends AppCompatActivity {
     ViewPager viewPager;
     BottomNavigationView bottomNavigationView;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +24,9 @@ public class TeacherDashboard extends AppCompatActivity {
 
         viewPager = findViewById(R.id.tvp);
         bottomNavigationView = findViewById(R.id.bottomNav);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         TeacherVPadapter teacherVPadapter= new TeacherVPadapter(getSupportFragmentManager());
         viewPager.setAdapter(teacherVPadapter);
@@ -35,12 +40,15 @@ public class TeacherDashboard extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         bottomNavigationView.getMenu().getItem(0).setChecked(true);
+                        toolbar.setTitle("WorkList");
                         break;
                     case 1:
                         bottomNavigationView.getMenu().getItem(1).setChecked(true);
+                        toolbar.setTitle("Sections");
                         break;
                     case 2:
                         bottomNavigationView.getMenu().getItem(2).setChecked(true);
+                        toolbar.setTitle("Profile");
                         break;
                 }
             }
