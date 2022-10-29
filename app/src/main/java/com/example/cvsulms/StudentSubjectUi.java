@@ -5,31 +5,38 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class TeacherDashboard extends AppCompatActivity {
+public class StudentSubjectUi extends AppCompatActivity {
+    String secCode, subjCode,subj,teacherUid;
     ViewPager viewPager;
     BottomNavigationView bottomNavigationView;
     Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_dashboard);
+        setContentView(R.layout.activity_student_subject_ui);
 
         viewPager = findViewById(R.id.tvp);
         bottomNavigationView = findViewById(R.id.bottomNav);
 
+        secCode =getIntent().getExtras().getString("secCode");
+        subjCode = getIntent().getExtras().getString("subjCode");
+        subj =getIntent().getExtras().getString("subj");
+        teacherUid =getIntent().getExtras().getString("teacherUid");
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle(subjCode+" "+secCode);
 
-        TeacherVPadapter teacherVPadapter= new TeacherVPadapter(getSupportFragmentManager());
-        viewPager.setAdapter(teacherVPadapter);
+        StudentSubjectVPadapter studentSubjectVPadapter= new StudentSubjectVPadapter(getSupportFragmentManager());
+        viewPager.setAdapter(studentSubjectVPadapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -40,15 +47,9 @@ public class TeacherDashboard extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         bottomNavigationView.getMenu().getItem(0).setChecked(true);
-                        toolbar.setTitle("WorkList");
                         break;
                     case 1:
                         bottomNavigationView.getMenu().getItem(1).setChecked(true);
-                        toolbar.setTitle("Sections");
-                        break;
-                    case 2:
-                        bottomNavigationView.getMenu().getItem(2).setChecked(true);
-                        toolbar.setTitle("Profile");
                         break;
                 }
             }
@@ -64,11 +65,8 @@ public class TeacherDashboard extends AppCompatActivity {
                     case R.id.WorkList:
                         viewPager.setCurrentItem(0);
                         break;
-                    case R.id.Section:
+                    case R.id.Materials:
                         viewPager.setCurrentItem(1);
-                        break;
-                    case R.id.TeacherProfile:
-                        viewPager.setCurrentItem(2);
                         break;
                 }
                 return false;
@@ -82,18 +80,8 @@ public class TeacherDashboard extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {TeacherDashboard.super.onBackPressed();
-                        finish();
-                        finishAndRemoveTask();
-                        finishAffinity();
-                        System.exit(0);
-                    }
-                }).create().show();
+        startActivity( new Intent(StudentSubjectUi.this, StudentDashboard.class));
+        StudentSubjectUi.this.finish();
+        finishAndRemoveTask();
     }
-
-}
+    }

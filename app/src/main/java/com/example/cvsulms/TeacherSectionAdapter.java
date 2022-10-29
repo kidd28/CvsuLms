@@ -1,6 +1,7 @@
 package com.example.cvsulms;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,9 @@ public class TeacherSectionAdapter extends RecyclerView.Adapter<TeacherSectionAd
     public void onBindViewHolder(@NonNull TeacherSectionAdapter.HolderTSAdapter holder, int position) {
         TeacherSectionModel model = seclist.get(position);
         String secCode = model.getSecCode();
+        String subjCode = model.getSubjCode();
         String subj = model.getSubject();
+        String teacherUid = model.getTeacherUid();
 
         holder.section.setText(secCode);
         holder.subject.setText(subj);
@@ -37,7 +40,23 @@ public class TeacherSectionAdapter extends RecyclerView.Adapter<TeacherSectionAd
         holder.section.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent (context, TeacherSectionUi.class);
+                intent.putExtra("secCode",secCode );
+                intent.putExtra("subjCode",subjCode );
+                intent.putExtra("subj",subj );
+                intent.putExtra("teacherUid",teacherUid );
+                context.startActivity(intent);
+            }
+        });
+        holder.subject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (context, TeacherSectionUi.class);
+                intent.putExtra("secCode",secCode );
+                intent.putExtra("subjCode",subjCode );
+                intent.putExtra("subj",subj );
+                intent.putExtra("teacherUid",teacherUid );
+                context.startActivity(intent);
             }
         });
     }

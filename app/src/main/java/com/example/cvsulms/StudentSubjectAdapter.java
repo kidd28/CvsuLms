@@ -1,6 +1,7 @@
 package com.example.cvsulms;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,19 +29,41 @@ public class StudentSubjectAdapter extends RecyclerView.Adapter<StudentSubjectAd
     @Override
     public void onBindViewHolder(@NonNull StudentSubjectAdapter.HolderAdapter holder, int position) {
         StudentSubjectModel model = sublist.get(position);
+        String secCode = model.getSecCode();
         String subjCode = model.getSubjCode();
         String subj = model.getSubject();
+        String teacherUid = model.getTeacherUid();
 
         holder.subjcode.setText(subjCode);
         holder.subject.setText(subj);
 
+        holder.subjcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (context, StudentSubjectUi.class);
+                intent.putExtra("secCode",secCode );
+                intent.putExtra("subjCode",subjCode );
+                intent.putExtra("subj",subj );
+                intent.putExtra("teacherUid",teacherUid );
+                context.startActivity(intent);
+            }
+        });
+        holder.subject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (context, StudentSubjectUi.class);
+                intent.putExtra("secCode",secCode );
+                intent.putExtra("subjCode",subjCode );
+                intent.putExtra("subj",subj );
+                intent.putExtra("teacherUid",teacherUid );
+                context.startActivity(intent);
+            }
+        });
     }
     @Override
     public int getItemCount() {
-        return sublist.size()
-                ;
+        return sublist.size();
     }
-
     public class HolderAdapter extends RecyclerView.ViewHolder {
         private TextView subjcode, subject;
         public HolderAdapter(@NonNull View itemView) {

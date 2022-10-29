@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateTask"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+        <EditText
+            android:id="@+id/Title"
+            android:singleLine="true"
+            android:padding="10dp"
+            android:hint="Enter Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/TaskDes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description"
+                android:minHeight="200dp"
+                android:inputType="textMultiLine|textCapSentences"
+                android:gravity="top"/>
+            <Button
+                android:id="@+id/CreateTask"
+                android:layout_marginTop="10dp"
+                android:text="Add new Task"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:background="@drawable/mybutton"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                />
+    </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

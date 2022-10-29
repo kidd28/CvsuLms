@@ -243,4 +243,9 @@ public class StudentProfile extends Fragment {
                     }
                 });
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getFragmentManager().beginTransaction().remove((Fragment) StudentProfile.this).commitAllowingStateLoss();
+    }
 }

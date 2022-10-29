@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TodoList">
+    tools:context=".TeacherSectionTask">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,6 +16,18 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/task_list" />
     </RelativeLayout>
+    <Button
+        android:id="@+id/CreateTask"
+        android:text="Add new Task"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:background="@drawable/mybutton"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        />
 
 
 </RelativeLayout>

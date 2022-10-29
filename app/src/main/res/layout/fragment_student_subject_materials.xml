@@ -3,18 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TodoList">
+    tools:context=".StudentSubjectMaterials">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#9FBFA0">
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/taskrv"
+            android:id="@+id/matrv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/task_list" />
     </RelativeLayout>
-
-
 </RelativeLayout>

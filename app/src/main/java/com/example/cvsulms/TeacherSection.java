@@ -129,4 +129,9 @@ public class TeacherSection extends Fragment {
             }
         });
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getFragmentManager().beginTransaction().remove((Fragment) TeacherSection.this).commitAllowingStateLoss();
+    }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Task"
+        android:id="@+id/Task"
+        android:icon="@drawable/ic_photos"/>
+    <item
+        android:id="@+id/Materials"
+        android:icon="@drawable/ic_playlist"
+        android:title="Materials" />
+
+    <item android:title="Student List"
+        android:id="@+id/StudentList"
+        android:icon="@drawable/ic_person"/>
+</menu>

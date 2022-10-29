@@ -104,7 +104,7 @@ public class Subjects extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
-                    CourSection = "" + ds.child("Cour&Sec").getValue();
+                    CourSection = "" + ds.child("secCode").getValue();
                 }
             }
             @Override
@@ -134,5 +134,10 @@ public class Subjects extends Fragment {
         });
 
 
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getFragmentManager().beginTransaction().remove((Fragment) Subjects.this).commitAllowingStateLoss();
     }
 }

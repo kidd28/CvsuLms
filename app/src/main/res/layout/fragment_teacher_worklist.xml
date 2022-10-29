@@ -9,14 +9,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:background="#9FBFA0">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:text="Worklist"
-            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/taskrv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/task_list" />
     </RelativeLayout>
 </RelativeLayout>

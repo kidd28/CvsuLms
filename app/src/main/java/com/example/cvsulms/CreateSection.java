@@ -55,14 +55,11 @@ Button create;
                 String sectioncode = SectionCode.getText().toString();
                 String subject = Subject.getText().toString();
                 String subjcode = SubjCode.getText().toString();
-
                 createSection(year,section, sectioncode, subject, subjcode);
 
             }
         });
     }
-
-
 
     private void createSection(String yearlvl, String sec, String sectionCode, String subJect ,String subjCode) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sections");
@@ -128,5 +125,12 @@ Button create;
                         Toast.makeText(CreateSection.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    @Override
+    public void onBackPressed() {
+        startActivity( new Intent(CreateSection.this, TeacherDashboard.class));
+        CreateSection.this.finish();
+        finishAffinity();
+        finishAndRemoveTask();
     }
 }

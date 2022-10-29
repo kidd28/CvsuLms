@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,14 +25,15 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TeacherWorklist#newInstance} factory method to
+ * Use the {@link TeacherSectionStuList#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TeacherWorklist extends Fragment {
-    String secCode, subjCode,subj,teacherUid,CourSection;
+public class TeacherSectionStuList extends Fragment {
+    String secCode, subjCode,subj,teacherUid;
+
     RecyclerView recyclerView;
-    ArrayList<TaskModel> TaskModel;
-    TaskAdapter TaskAdapter;
+    ArrayList<StudentListModel> studentListModels;
+    StudentListAdapter studentListAdapter;
     FirebaseUser user;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,21 +44,20 @@ public class TeacherWorklist extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public TeacherWorklist() {
+    public TeacherSectionStuList() {
         // Required empty public constructor
     }
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment TeacherWorklist.
+     * @return A new instance of fragment TeacherSectionStuList.
      */
     // TODO: Rename and change types and number of parameters
-    public static TeacherWorklist newInstance(String param1, String param2) {
-        TeacherWorklist fragment = new TeacherWorklist();
+    public static TeacherSectionStuList newInstance(String param1, String param2) {
+        TeacherSectionStuList fragment = new TeacherSectionStuList();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -72,48 +73,54 @@ public class TeacherWorklist extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_teacher_worklist, container, false);
-        recyclerView=v.findViewById(R.id.taskrv);
+        View v= inflater.inflate(R.layout.fragment_teacher_section_stu_list, container, false);
+
+        recyclerView=v.findViewById(R.id.sturv);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        TaskModel = new ArrayList<>();
+        studentListModels = new ArrayList<>();
 
-        loadTask();
+        secCode = getActivity().getIntent().getExtras().getString("secCode");
+        subjCode = getActivity().getIntent().getExtras().getString("subjCode");
+        subj = getActivity().getIntent().getExtras().getString("subj");
+        teacherUid = getActivity().getIntent().getExtras().getString("teacherUid");
+
+        loadstudents();
 
         return v;
-    } private void loadTask(){
+    }
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
+    private void loadstudents() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Students");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                TaskModel.clear();
+                studentListModels.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
-                    if(ds.child("TeacherUid").getValue().equals(user.getUid())){
-                        TaskModel model = ds.getValue(TaskModel.class);
-                        TaskModel.add(model);
+                    if(ds.child("secCode").getValue().equals(secCode)){
+                        StudentListModel model = ds.getValue(StudentListModel.class);
+                        studentListModels.add(model);
                     }
                 }
-                TaskAdapter = new TaskAdapter(getContext(), TaskModel);
-                recyclerView.setAdapter(TaskAdapter);
-                TaskAdapter.notifyDataSetChanged();
+                studentListAdapter = new StudentListAdapter(getContext(), studentListModels);
+                recyclerView.setAdapter(studentListAdapter);
+                studentListAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getFragmentManager().beginTransaction().remove((Fragment) TeacherWorklist.this).commitAllowingStateLoss();
+        getFragmentManager().beginTransaction().remove((Fragment) TeacherSectionStuList.this).commitAllowingStateLoss();
     }
 }

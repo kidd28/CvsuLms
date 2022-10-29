@@ -240,6 +240,11 @@ public class TeacherProfile extends Fragment {
                     }
                 });
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getFragmentManager().beginTransaction().remove((Fragment) TeacherProfile.this).commitAllowingStateLoss();
+    }
 
 
 }

@@ -1,10 +1,10 @@
 package com.example.cvsulms;
 
 public class StudentSubjectModel {
-    String Section, SecCode, Yearlvl , SectionId, TeacherName, TeacherNumber, TeacherUid, Subject, SubjCode;
+    String Section, SecCode, Yearlvl , SectionId, TeacherName, TeacherNumber, TeacherUid, Subject, SubjCode, TaskId;
 
     public StudentSubjectModel() {}
-    public StudentSubjectModel(String Section, String SecCode, String Yearlvl , String SectionId, String TeacherName, String TeacherNumber,String TeacherUid, String Subject, String SubjCode){
+    public StudentSubjectModel(String Section, String SecCode, String Yearlvl , String SectionId, String TeacherName, String TeacherNumber,String TeacherUid, String Subject, String SubjCode,String TaskId){
         this.Section = Section;
         this.SecCode = SecCode;
         this.Yearlvl = Yearlvl;
@@ -14,6 +14,7 @@ public class StudentSubjectModel {
         this.TeacherUid = TeacherUid;
         this.Subject = Subject;
         this.SubjCode = SubjCode;
+        this.TaskId = TaskId;
     }
 
     public String getSection() {
@@ -86,5 +87,13 @@ public class StudentSubjectModel {
 
     public void setTeacherUid(String teacherUid) {
         TeacherUid = teacherUid;
+    }
+
+    public String getTaskId() {
+        return TaskId;
+    }
+
+    public void setTaskId(String taskId) {
+        TaskId = taskId;
     }
 }

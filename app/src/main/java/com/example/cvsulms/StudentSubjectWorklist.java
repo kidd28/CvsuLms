@@ -1,5 +1,6 @@
 package com.example.cvsulms;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,15 +25,17 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TeacherWorklist#newInstance} factory method to
+ * Use the {@link StudentSubjectWorklist#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TeacherWorklist extends Fragment {
-    String secCode, subjCode,subj,teacherUid,CourSection;
+public class StudentSubjectWorklist extends Fragment {
+    String secCode, subjCode,subj,teacherUid;
     RecyclerView recyclerView;
     ArrayList<TaskModel> TaskModel;
     TaskAdapter TaskAdapter;
     FirebaseUser user;
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,7 +45,7 @@ public class TeacherWorklist extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public TeacherWorklist() {
+    public StudentSubjectWorklist() {
         // Required empty public constructor
     }
 
@@ -52,11 +55,11 @@ public class TeacherWorklist extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment TeacherWorklist.
+     * @return A new instance of fragment StudentSubjectWorklist.
      */
     // TODO: Rename and change types and number of parameters
-    public static TeacherWorklist newInstance(String param1, String param2) {
-        TeacherWorklist fragment = new TeacherWorklist();
+    public static StudentSubjectWorklist newInstance(String param1, String param2) {
+        StudentSubjectWorklist fragment = new StudentSubjectWorklist();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -76,8 +79,14 @@ public class TeacherWorklist extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_teacher_worklist, container, false);
+
+        View v=  inflater.inflate(R.layout.fragment_student_subject_worklist, container, false);
+
+        secCode = getActivity().getIntent().getExtras().getString("secCode");
+        subjCode = getActivity().getIntent().getExtras().getString("subjCode");
+        subj = getActivity().getIntent().getExtras().getString("subj");
+        teacherUid = getActivity().getIntent().getExtras().getString("teacherUid");
+
         recyclerView=v.findViewById(R.id.taskrv);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -86,8 +95,9 @@ public class TeacherWorklist extends Fragment {
 
         loadTask();
 
-        return v;
-    } private void loadTask(){
+        return  v;
+    }
+    private void loadTask(){
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
@@ -96,7 +106,7 @@ public class TeacherWorklist extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 TaskModel.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
-                    if(ds.child("TeacherUid").getValue().equals(user.getUid())){
+                    if(ds.child("SubjCode").getValue().equals(subjCode) && ds.child("SecCode").getValue().equals(secCode)){
                         TaskModel model = ds.getValue(TaskModel.class);
                         TaskModel.add(model);
                     }
@@ -110,10 +120,11 @@ public class TeacherWorklist extends Fragment {
 
             }
         });
-    }
-    @Override
+
+}@Override
     public void onDestroy() {
         super.onDestroy();
-        getFragmentManager().beginTransaction().remove((Fragment) TeacherWorklist.this).commitAllowingStateLoss();
+        getFragmentManager().beginTransaction().remove((Fragment) StudentSubjectWorklist.this).commitAllowingStateLoss();
     }
+
 }
