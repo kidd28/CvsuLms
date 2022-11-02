@@ -1,16 +1,14 @@
 package com.example.cvsulms;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,7 +54,6 @@ public class CreateMaterial extends AppCompatActivity {
     }
 
     private void uploadMaterial(String title, String description, String secCode, String subjCode, String subj, String teacherUid) {
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Materials");
         String MaterialId =""+ System.currentTimeMillis();
         HashMap<String, String> hashMap = new HashMap<>();
@@ -71,7 +68,6 @@ public class CreateMaterial extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 Toast.makeText(CreateMaterial.this, "Task uploaded successfully", Toast.LENGTH_SHORT).show();
-
                 HashMap<String, String> hashMap1 = new HashMap<>();
                 hashMap1.put("Title",""+title);
                 hashMap1.put("Description",description);

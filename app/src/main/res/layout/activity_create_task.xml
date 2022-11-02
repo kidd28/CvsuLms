@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#9FBFA0"
+
     tools:context=".CreateTask"
     android:gravity="center">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/dark_green"
         android:layout_margin="20dp"
         android:gravity="center">
         <LinearLayout
@@ -32,6 +35,19 @@
                 android:minHeight="200dp"
                 android:inputType="textMultiLine|textCapSentences"
                 android:gravity="top"/>
+            <Button
+                android:id="@+id/uploadFile"
+                android:layout_marginTop="10dp"
+                android:text="Upload File"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:background="@drawable/mybutton"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                />
             <Button
                 android:id="@+id/CreateTask"
                 android:layout_marginTop="10dp"
