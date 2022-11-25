@@ -2,17 +2,17 @@ package com.example.cvsulms;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,12 +98,24 @@ public class TeacherSectionTask extends Fragment {
         createtask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String TaskId =""+ System.currentTimeMillis();
                 Intent intent = new Intent (getActivity(), CreateTask.class);
                 intent.putExtra("secCode",secCode );
                 intent.putExtra("subjCode",subjCode );
                 intent.putExtra("subj",subj );
                 intent.putExtra("teacherUid",teacherUid );
-                getActivity().startActivity(intent);
+                intent.putExtra("TaskId",TaskId );
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("TaskId", TaskId);
+                reference.child(TaskId).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        getActivity().startActivity(intent);
+                    }
+                });
+
             }
         });
         return  v;
@@ -117,7 +131,7 @@ public class TeacherSectionTask extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 TaskModel.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
-                    if(ds.child("TeacherUid").getValue().equals(user.getUid()) && ds.child("SecCode").getValue().equals(secCode)){
+                    if(Objects.equals(ds.child("TeacherUid").getValue(), user.getUid()) && Objects.equals(ds.child("SecCode").getValue(), secCode)){
                         TaskModel model = ds.getValue(TaskModel.class);
                         TaskModel.add(model);
                     }

@@ -1,15 +1,14 @@
 package com.example.cvsulms;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,10 +16,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,8 +95,8 @@ public class TeacherWorklist extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 TaskModel.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
-                    if(ds.child("TeacherUid").getValue().equals(user.getUid())){
-                        TaskModel model = ds.getValue(TaskModel.class);
+                    if(Objects.equals(ds.child("TeacherUid").getValue(), user.getUid())){
+                            TaskModel model = ds.getValue(TaskModel.class);
                         TaskModel.add(model);
                     }
                 }

@@ -48,6 +48,10 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
     String subj,teacherUid;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
+    String TaskId;
+
+    Boolean upfile = false;
+
 
     private static final String TAG = "MainActivity";
 
@@ -73,13 +77,14 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
         subjCode = getIntent().getExtras().getString("subjCode");
         subj = getIntent().getExtras().getString("subj");
         teacherUid = getIntent().getExtras().getString("teacherUid");
+        TaskId = getIntent().getExtras().getString("TaskId");
 
         firebaseAuth = FirebaseAuth.getInstance();
         user =  firebaseAuth.getCurrentUser();
 
-        requestSignIn();
+         requestSignIn();
 
-        createTask.setOnClickListener(new View.OnClickListener() {
+         createTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String Title = title.getText().toString();
@@ -91,6 +96,7 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
         uploadFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                upfile = true;
                 createFolder();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     requestPermission();
@@ -100,6 +106,7 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
             }
         });
     }
+
     private void requestPermissionBelowR() {
         String[] perms ={Manifest.permission.READ_EXTERNAL_STORAGE};
                 if (EasyPermissions.hasPermissions(this, perms)) {
@@ -138,37 +145,66 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
     }
 
     private void uploadTask(String title, String description, String secCode, String subjCode, String subj, String teacherUid) {
+        if(!upfile) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("Title",""+title);
+            hashMap.put("Description",description);
+            hashMap.put("SecCode", secCode);
+            hashMap.put("Subject", subj);
+            hashMap.put("SubjCode", subjCode);
+            hashMap.put("TeacherUid", user.getUid());
+            hashMap.put("FileId","null");
+            hashMap.put("Filelink", "null");
+            reference.child(TaskId).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(CreateTask.this, "Task uploaded successfully", Toast.LENGTH_SHORT).show();
+                    HashMap<String, Object> hashMap1 = new HashMap<>();
+                    hashMap1.put("Title",""+title);
+                    hashMap1.put("Description",description);
+                    hashMap1.put("SecCode", secCode);
+                    hashMap1.put("Subject", subj);
+                    hashMap1.put("FileId","null");
+                    hashMap1.put("Filelink", "null");
+                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Sections");
+                    reference1.child(secCode+subjCode).child("Task").child(TaskId).updateChildren(hashMap1);
+                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Subjects");
+                    reference2.child(secCode+subjCode).child("Task").child(TaskId).updateChildren(hashMap1);
+                    startActivity(new Intent(CreateTask.this,TeacherSectionUi.class));
+                    CreateTask.this.finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(CreateTask.this, "Task failed to upload, please try again", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }else {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
-        String TaskId =""+ System.currentTimeMillis();
-        HashMap<String, String> hashMap = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("Title",""+title);
         hashMap.put("Description",description);
         hashMap.put("SecCode", secCode);
         hashMap.put("Subject", subj);
         hashMap.put("SubjCode", subjCode);
         hashMap.put("TeacherUid", user.getUid());
-        hashMap.put("TaskId", TaskId);
-        reference.child(TaskId).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+        reference.child(TaskId).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 Toast.makeText(CreateTask.this, "Task uploaded successfully", Toast.LENGTH_SHORT).show();
-
-                HashMap<String, String> hashMap1 = new HashMap<>();
+                HashMap<String, Object> hashMap1 = new HashMap<>();
                 hashMap1.put("Title",""+title);
-
                 hashMap1.put("Description",description);
                 hashMap1.put("SecCode", secCode);
                 hashMap1.put("Subject", subj);
                 hashMap1.put("SubjCode", subjCode);
                 hashMap1.put("TeacherUid", user.getUid());
-                hashMap1.put("TaskId", TaskId);
-
                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Sections");
-                reference1.child(secCode+subjCode).child("Task").child(TaskId).setValue(hashMap1);
-
+                reference1.child(secCode+subjCode).child("Task").child(TaskId).updateChildren(hashMap1);
                 DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Subjects");
-                reference2.child(secCode+subjCode).child("Task").child(TaskId).setValue(hashMap1);
-
+                reference2.child(secCode+subjCode).child("Task").child(TaskId).updateChildren(hashMap1);
                 startActivity(new Intent(CreateTask.this,TeacherSectionUi.class));
                 CreateTask.this.finish();
             }
@@ -177,10 +213,14 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(CreateTask.this, "Task failed to upload, please try again", Toast.LENGTH_SHORT).show();
             }
-        });
+        });}
     }
     @Override
     public void onBackPressed() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+                .child("Tasks").child(TaskId);
+        ref.removeValue();
+
         startActivity( new Intent(CreateTask.this, TeacherDashboard.class));
         CreateTask.this.finish();
         finishAffinity();
@@ -262,7 +302,6 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
                 // Get the path
                 String selectedFilePath =FileUtils.getPath(this,selectedFileUri);
                 Log.e(TAG,"Selected File Path:" + selectedFilePath);
-
                 if(selectedFilePath != null && !selectedFilePath.equals("")){
                     if (mDriveServiceHelper != null) {
                         mDriveServiceHelper.uploadFileToGoogleDrive(selectedFilePath)
@@ -296,7 +335,6 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener(googleAccount -> {
                     Log.d(TAG, "Signed in as " + googleAccount.getEmail());
-
                     // Use the authenticated account to sign in to the Drive service.
                     GoogleAccountCredential credential =
                             GoogleAccountCredential.usingOAuth2(
@@ -309,12 +347,9 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
                                     credential)
                                     .setApplicationName("Drive API Migration")
                                     .build();
-
-
                     // The DriveServiceHelper encapsulates all REST API and SAF functionality.
                     // Its instantiation is required before handling any onClick actions.
-                    mDriveServiceHelper = new DriveServiceHelper(googleDriveService,secCode);
-
+                    mDriveServiceHelper = new DriveServiceHelper(googleDriveService,secCode,TaskId);
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -323,7 +358,6 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
                     }
                 });
     }
-
     // This method will get call when user click on sign-in button
     public void signIn(View view) {
         requestSignIn();
@@ -363,7 +397,6 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
                                             public void onSuccess(String fileId) {
                                                 Log.e(TAG, "folder id: "+fileId );
                                                 folderId=fileId;
-
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -378,7 +411,6 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
                                 folderId=id;
 
                             }
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

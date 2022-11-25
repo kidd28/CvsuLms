@@ -36,6 +36,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HolderAdapter>
         holder.SubjCode.setText(subjCode);
         holder.Title.setText(Title);
 
+
+
     }
     @Override
     public int getItemCount() {
