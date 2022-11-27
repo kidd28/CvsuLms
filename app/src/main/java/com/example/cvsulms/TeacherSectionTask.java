@@ -36,7 +36,7 @@ public class TeacherSectionTask extends Fragment {
 
     RecyclerView recyclerView;
     ArrayList<TaskModel> TaskModel;
-    TaskAdapter TaskAdapter;
+    TeacherTaskAdapter teacherTaskAdapter;
     FirebaseUser user;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -105,7 +105,6 @@ public class TeacherSectionTask extends Fragment {
                 intent.putExtra("subj",subj );
                 intent.putExtra("teacherUid",teacherUid );
                 intent.putExtra("TaskId",TaskId );
-
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("TaskId", TaskId);
@@ -122,7 +121,6 @@ public class TeacherSectionTask extends Fragment {
 
 
     }
-
     private void loadTask(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
@@ -136,9 +134,9 @@ public class TeacherSectionTask extends Fragment {
                         TaskModel.add(model);
                     }
                 }
-                TaskAdapter = new TaskAdapter(getContext(), TaskModel);
-                recyclerView.setAdapter(TaskAdapter);
-                TaskAdapter.notifyDataSetChanged();
+                teacherTaskAdapter = new TeacherTaskAdapter(getContext(), TaskModel);
+                recyclerView.setAdapter(teacherTaskAdapter);
+                teacherTaskAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

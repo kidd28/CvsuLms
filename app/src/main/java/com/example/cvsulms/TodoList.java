@@ -1,15 +1,14 @@
 package com.example.cvsulms;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +20,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +31,7 @@ public class TodoList extends Fragment {
     String secCode, subjCode,subj,teacherUid,CourSection;
     RecyclerView recyclerView;
     ArrayList<TaskModel> TaskModel;
-    TaskAdapter TaskAdapter;
+    StudentTaskAdapter StudentTaskAdapter;
     FirebaseUser user;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -97,7 +97,7 @@ public class TodoList extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
-                    CourSection = "" + ds.child("secCode").getValue();
+                    CourSection = "" + ds.child("SecCode").getValue();
                 }
             }
             @Override
@@ -112,14 +112,14 @@ public class TodoList extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 TaskModel.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
-                    if(ds.child("SecCode").getValue().equals(CourSection)){
+                    if(Objects.equals(ds.child("SecCode").getValue(), CourSection)){
                         TaskModel model = ds.getValue(TaskModel.class);
                         TaskModel.add(model);
                     }
                 }
-                TaskAdapter = new TaskAdapter(getContext(), TaskModel);
-                recyclerView.setAdapter(TaskAdapter);
-                TaskAdapter.notifyDataSetChanged();
+                StudentTaskAdapter = new StudentTaskAdapter(getContext(), TaskModel);
+                recyclerView.setAdapter(StudentTaskAdapter);
+                StudentTaskAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

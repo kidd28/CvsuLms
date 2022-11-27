@@ -11,6 +11,7 @@ import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.api.services.drive.model.Permission;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -27,12 +28,13 @@ public class DriveServiceHelper {
     private static final String TAG = "GoogleDriveService";
     private final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
     private final String FOLDER_NAME = "CvsuLms";
-    String secCode,TaskId;
+    String secCode,TaskId,uploadType;
 
-    public DriveServiceHelper(Drive driveService, String secCode, String TaskId) {
+    public DriveServiceHelper(Drive driveService, String secCode, String TaskId, String uploadType) {
         mDriveService = driveService;
         this.secCode = secCode;
         this.TaskId = TaskId;
+        this.uploadType = uploadType;
     }
     /**
      * Upload the file to the user's My Drive Folder.
@@ -59,14 +61,27 @@ public class DriveServiceHelper {
                     File file = mDriveService.files().create(upFile, mediaContent)
                             .setFields("id,parents,name ,webContentLink")
                             .execute();
+                    mDriveService.permissions().create(file.getId(),new Permission().setRole("reader").setType("anyone").setAllowFileDiscovery(true)).execute();
                     System.out.println("File ID: " + file.getId());
                     System.out.println("link: " + file.getWebContentLink());
 
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    hashMap.put("FileId", file.getId());
-                    hashMap.put("Filelink", file.getWebContentLink());
-                    reference.child(TaskId).updateChildren(hashMap);
+
+                    if(uploadType.equals("Task")){
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("FileId", file.getId());
+                        hashMap.put("FileName", file.getName());
+                        hashMap.put("Filelink", file.getWebContentLink());
+                        reference.child(TaskId).updateChildren(hashMap);
+                    }else if (uploadType.equals("Material")){
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Materials");
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("FileId", file.getId());
+                        hashMap.put("FileName", file.getName());
+                        hashMap.put("Filelink", file.getWebContentLink());
+                        reference.child(TaskId).updateChildren(hashMap);
+                    }
+
                     break;
                 }else {
                     File metadata = new File()
@@ -82,14 +97,25 @@ public class DriveServiceHelper {
                     File file = mDriveService.files().create(upFile, mediaContent)
                             .setFields("id,parents,name ,webContentLink")
                             .execute();
+                    mDriveService.permissions().create(file.getId(),new Permission().setRole("reader").setType("anyone").setAllowFileDiscovery(true)).execute();
                     System.out.println("File ID: " + file.getId());
                     System.out.println("link: " + file.getWebContentLink());
 
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    hashMap.put("FileId", file.getId());
-                    hashMap.put("Filelink", file.getWebContentLink());
-                    reference.child(TaskId).updateChildren(hashMap);
+                    if(uploadType.equals("Task")){
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("FileId", file.getId());
+                        hashMap.put("FileName", file.getName());
+                        hashMap.put("Filelink", file.getWebContentLink());
+                        reference.child(TaskId).updateChildren(hashMap);
+                    }else if (uploadType.equals("Material")){
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Materials");
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("FileId", file.getId());
+                        hashMap.put("FileName", file.getName());
+                        hashMap.put("Filelink", file.getWebContentLink());
+                        reference.child(TaskId).updateChildren(hashMap);
+                    }
                     break;
                 }
             }
@@ -124,13 +150,14 @@ public class DriveServiceHelper {
                     .setMimeType(FOLDER_MIME_TYPE)
                     .setName(FOLDER_NAME);
             File googleFolder = mDriveService.files().create(metadata).execute();
+            mDriveService.permissions().create(googleFolder.getId(),new Permission().setRole("reader").setType("anyone").setAllowFileDiscovery(true)).execute();
+
             if (googleFolder == null) {
                 throw new IOException("Null result when requesting Folder creation.");
             }
             return googleFolder.getId();
         });
     }
-
 
 
 }

@@ -1,16 +1,14 @@
 package com.example.cvsulms;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,8 +31,9 @@ public class StudentSubjectMaterials extends Fragment {
 
     RecyclerView recyclerView;
     ArrayList<MaterialModel> materialModels;
-    MaterialAdapter materialAdapter;
+    TeacherMaterialAdapter materialAdapter;
     FirebaseUser user;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -105,12 +105,12 @@ public class StudentSubjectMaterials extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 materialModels.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
-                    if(ds.child("SubjCode").getValue().equals(subjCode) && ds.child("SecCode").getValue().equals(secCode)){
+                    if(Objects.equals(ds.child("SubjCode").getValue(), subjCode) && Objects.equals(ds.child("SecCode").getValue(), secCode)){
                         MaterialModel model = ds.getValue(MaterialModel.class);
                         materialModels.add(model);
                     }
                 }
-                materialAdapter = new MaterialAdapter(getContext(), materialModels);
+                materialAdapter = new TeacherMaterialAdapter(getContext(), materialModels);
                 recyclerView.setAdapter(materialAdapter);
                 materialAdapter.notifyDataSetChanged();
             }

@@ -30,7 +30,7 @@ public class TeacherWorklist extends Fragment {
     String secCode, subjCode,subj,teacherUid,CourSection;
     RecyclerView recyclerView;
     ArrayList<TaskModel> TaskModel;
-    TaskAdapter TaskAdapter;
+    TeacherTaskAdapter teacherTaskAdapter;
     FirebaseUser user;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,7 +87,6 @@ public class TeacherWorklist extends Fragment {
 
         return v;
     } private void loadTask(){
-
         user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tasks");
         reference.addValueEventListener(new ValueEventListener() {
@@ -100,9 +99,9 @@ public class TeacherWorklist extends Fragment {
                         TaskModel.add(model);
                     }
                 }
-                TaskAdapter = new TaskAdapter(getContext(), TaskModel);
-                recyclerView.setAdapter(TaskAdapter);
-                TaskAdapter.notifyDataSetChanged();
+                teacherTaskAdapter = new TeacherTaskAdapter(getContext(), TaskModel);
+                recyclerView.setAdapter(teacherTaskAdapter);
+                teacherTaskAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

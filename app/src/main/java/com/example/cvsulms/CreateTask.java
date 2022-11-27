@@ -51,17 +51,12 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
     String TaskId;
 
     Boolean upfile = false;
-
-
     private static final String TAG = "MainActivity";
-
     private static final int REQUEST_CODE_SIGN_IN = 1;
     private static final int PICK_FILE_REQUEST = 100;
-
     static DriveServiceHelper mDriveServiceHelper;
     static String folderId="";
     String secCode, subjCode;
-
     GoogleSignInClient googleSignInClient;
 
     @Override
@@ -73,6 +68,7 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
         uploadFile = findViewById(R.id.uploadFile);
         title = findViewById(R.id.Title);
         description = findViewById(R.id.TaskDes);
+
         secCode =getIntent().getExtras().getString("secCode");
         subjCode = getIntent().getExtras().getString("subjCode");
         subj = getIntent().getExtras().getString("subj");
@@ -349,7 +345,7 @@ public class CreateTask extends AppCompatActivity implements EasyPermissions.Per
                                     .build();
                     // The DriveServiceHelper encapsulates all REST API and SAF functionality.
                     // Its instantiation is required before handling any onClick actions.
-                    mDriveServiceHelper = new DriveServiceHelper(googleDriveService,secCode,TaskId);
+                    mDriveServiceHelper = new DriveServiceHelper(googleDriveService,secCode,TaskId, "Task");
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override

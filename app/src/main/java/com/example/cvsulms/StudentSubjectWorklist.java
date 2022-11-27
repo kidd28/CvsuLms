@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,9 +30,8 @@ public class StudentSubjectWorklist extends Fragment {
     String secCode, subjCode,subj,teacherUid;
     RecyclerView recyclerView;
     ArrayList<TaskModel> TaskModel;
-    TaskAdapter TaskAdapter;
+    StudentTaskAdapter StudentTaskAdapter;
     FirebaseUser user;
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -94,14 +94,14 @@ public class StudentSubjectWorklist extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 TaskModel.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
-                    if(ds.child("SubjCode").getValue().equals(subjCode) && ds.child("SecCode").getValue().equals(secCode)){
+                    if(Objects.equals(ds.child("SubjCode").getValue(), subjCode) && Objects.equals(ds.child("SecCode").getValue(), secCode)){
                         TaskModel model = ds.getValue(TaskModel.class);
                         TaskModel.add(model);
                     }
                 }
-                TaskAdapter = new TaskAdapter(getContext(), TaskModel);
-                recyclerView.setAdapter(TaskAdapter);
-                TaskAdapter.notifyDataSetChanged();
+                StudentTaskAdapter = new StudentTaskAdapter(getContext(), TaskModel);
+                recyclerView.setAdapter(StudentTaskAdapter);
+                StudentTaskAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

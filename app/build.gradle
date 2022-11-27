@@ -58,8 +58,6 @@ dependencies {
     implementation 'pub.devrel:easypermissions:3.0.0'
 
 
-
-
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
 
     implementation ('com.google.apis:google-api-services-drive:v3-rev136-1.25.0')
